@@ -58,7 +58,11 @@ public class LSH extends SimilaritySearcher{
 	public static int[][] constructHashTable(int numHashes, int numValues, int prime, Random rand) {
 		int[][] hashes = new int[numValues][numHashes];
 
-		/* Fill in here */
+    for (int i = 0; i < numValues; i++) {
+      for (int j = 0; j < numHashes; j++) {
+
+      }
+    }
 		
 		return hashes;
 	}
