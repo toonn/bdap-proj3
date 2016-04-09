@@ -57,10 +57,19 @@ public class LSH extends SimilaritySearcher{
 	 */
 	public static int[][] constructHashTable(int numHashes, int numValues, int prime, Random rand) {
 		int[][] hashes = new int[numValues][numHashes];
+    int[] a = new int[numHashes];
+    int[] b = new int[numHashes];
+
+    for (int j = 0; j < numHashes; j++) {
+      do {
+        a[j] = rand.nextInt(prime);
+      } while (a[j] == 0);
+      b[j] = rand.nextInt(prime);
+    }
 
     for (int i = 0; i < numValues; i++) {
       for (int j = 0; j < numHashes; j++) {
-
+        hashes[i][j] = ((a[j] * i + b[j]) % prime) % numValues;
       }
     }
 		
