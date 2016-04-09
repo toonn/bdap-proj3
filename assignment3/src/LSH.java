@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.Arrays;
 
 
 /**
@@ -85,12 +86,28 @@ public class LSH extends SimilaritySearcher{
 	 */
 	public static int[][] constructSignatureMatrix(Map<Integer, Set<Integer>> objectMapping, int[][] hashValues) {
 		int numHashes = hashValues[0].length;
-		int numObjects = objectMapping.size();
+		int numObjects = objectMapping.size(); // NOT equal to numValues in constructHashTable
 
 		// initialize it to max int values
 		int[][] signatureMatrix = new int[numHashes][numObjects];
+    int[] max_values = new int[numObjects];
+    Arrays.fill(max_values, Integer.MAX_VALUE);
+    // fill would use the same reference for each row
+    for (int i = 0; i < numHashes; i++) {
+      signatureMatrix[i] = max_values.clone();
+    }
 
-		/* Fill in here */ 
+    for (int obj = 0; obj < numObjects; obj++) {
+      for (int r: objectMapping.get(obj)) {
+        for (int i = 0; i < numHashes; i++) {
+          int sig_i = signatureMatrix[i][obj];
+          int h_iofr = hashValues[r][i];
+          if (h_iofr < sig_i) {
+            signatureMatrix[i][obj] = h_iofr;
+          }
+        }
+      }
+    }
 
 		return signatureMatrix;
 
