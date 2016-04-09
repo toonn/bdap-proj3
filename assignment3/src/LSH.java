@@ -132,10 +132,12 @@ public class LSH extends SimilaritySearcher{
       bandStart = band * rowsPerBand;
       // easy parallel traversal?
       for (int obj = 0; obj < signatureMatrix[0].length; obj++) {
-        String key = "";
+        // 10 = average length of hash in digits
+        StringBuilder sb = new StringBuilder(10 * rowsPerBand);
         for (int r = 0; r < rowsPerBand; r++) {
-          key += signatureMatrix[bandStart+r][obj];
+          sb.append(signatureMatrix[bandStart+r][obj]);
         }
+        String key = sb.toString();
         if (bandToBuckets.get(band).get(key) == null) {
           bandToBuckets.get(band).put(key, new HashSet<Integer>());
         }
