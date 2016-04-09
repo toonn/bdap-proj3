@@ -124,7 +124,24 @@ public class LSH extends SimilaritySearcher{
 		List<Map<String, Set<Integer>>> bandToBuckets =
 		    new ArrayList<Map<String, Set<Integer>>>();
 
-		/* Fill in here */ 
+    int rowsPerBand = signatureMatrix.length / numBands;
+
+    int bandStart = 0;
+    for (int band = 0; band < numBands; band++) {
+      bandToBuckets.add(band, new HashMap<String, Set<Integer>>());
+      bandStart = band * rowsPerBand;
+      // easy parallel traversal?
+      for (int obj = 0; obj < signatureMatrix[0].length; obj++) {
+        String key = "";
+        for (int r = 0; r < rowsPerBand; r++) {
+          key += signatureMatrix[bandStart+r][obj];
+        }
+        if (bandToBuckets.get(band).get(key) == null) {
+          bandToBuckets.get(band).put(key, new HashSet<Integer>());
+        }
+        bandToBuckets.get(band).get(key).add(obj); 
+      }
+    }
 
 		return bandToBuckets;
 
