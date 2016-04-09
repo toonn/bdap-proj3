@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.Arrays;
+import java.util.Iterator;
 
 
 /**
@@ -148,6 +149,14 @@ public class LSH extends SimilaritySearcher{
 		return bandToBuckets;
 
 	}
+  private double jaccard(int first, int second) {
+    Set<Integer> intersection = new HashSet<Integer>(objectMapping.get(first));
+    intersection.retainAll(objectMapping.get(second));
+    Set<Integer> union = new HashSet<Integer>(objectMapping.get(first));
+    union.addAll(objectMapping.get(second));
+
+    return ((double) intersection.size()) / union.size();
+  }
 
 	/**
 	 * Returns the pairs with similarity above threshold (approximate).
@@ -156,7 +165,21 @@ public class LSH extends SimilaritySearcher{
 	public Set<SimilarPair> getSimilarPairsAboveThreshold(double threshold) {
 		List<SimilarPair> cands = new ArrayList<SimilarPair>();
 		
-		/* Fill in here */ 
+    for (Map<String, Set<Integer>> band : bandToBuckets) {
+      for (Set<Integer> bucket : band.values()) {
+        Iterator<Integer> it = bucket.iterator();
+        while (it.hasNext()) {
+          int first = it.next();
+          it.remove(); // Don't compare to itself (or previously viewed)
+          for (int second : bucket) {
+            double sim = jaccard(first, second);
+            if (sim > threshold) {
+              cands.add(new SimilarPair(first, second, sim));
+            }
+          }
+        }
+      }
+    }
 
 		return new HashSet<SimilarPair>(cands);
 
