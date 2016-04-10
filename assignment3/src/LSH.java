@@ -172,9 +172,9 @@ public class LSH extends SimilaritySearcher{
           int first = it.next();
           it.remove(); // Don't compare to itself (or previously viewed)
           for (int second : bucket) {
-            double sim = jaccard(first, second);
-            if (sim > threshold) {
-              cands.add(new SimilarPair(first, second, sim));
+            double similarity = jaccard(first, second);
+            if (similarity > threshold) {
+              cands.add(new SimilarPair(first, second, similarity));
             }
           }
         }
