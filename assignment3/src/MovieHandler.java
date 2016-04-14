@@ -168,6 +168,14 @@ public class MovieHandler{
 			return DEFAULT_RATING;
 	}
 
+	public double getMovieAverageRating() {
+		double sum = 0;
+		for (double rating : movieAverageRatings.values()) {
+			sum += rating;
+		}
+		return sum / getNumMovies();
+	}
+
 
 	/**
 	 * Returns the user to set mapping. Internal IDs are used here.

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.Map;
 
 /**
  * The MovieRunner can be ran from the commandline to perform minhash and LSH, and to afterwards predict user ratings.
@@ -87,11 +88,29 @@ public class MovieRunner {
 	 * @return the predicted rating
 	 */
 	public static double predictRating(int externUserID, int movieID){
+    List<Integer> userIDs = ratings.getUserIDs();
+    int internalID = userIDs.indexOf(externUserID);
+    double mu = ratings.getMovieAverageRating();
+    double usrDev = ratings.getAverageRating(externUserID) - mu;
+    double mvAvg = ratings.getMovieAverageRating(movieID) - mu;
 
+    Map<Integer, List<MovieRating>> userRatings = ratings.getUsersToRatings();
+    double neighborDev = 0;
+    double similaritySum = 0;
+    Set<Neighbor> neighbors = searcher.getNeighborsAboveThreshold(internalID, threshold);
+    for (Neighbor neighbor : neighbors) {
+      for (MovieRating mvRate : userRatings.get(userIDs.get(neighbor.getUserID())) ) {
+        if (movieID == mvRate.getMovieID()) {
+          neighborDev += neighbor.getSimilarity() * (mvRate.getRating() - mu);
+          similaritySum += neighbor.getSimilarity();
+        }
+      }
+    }
+    neighborDev /= similaritySum;
 
-	    /* Update this method */
+    double prediction = mu + usrDev + mvAvg + neighborDev;
 
-	    return MovieHandler.DEFAULT_RATING;
+    return prediction;
 
 	}
 	

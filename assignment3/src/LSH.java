@@ -22,6 +22,7 @@ import java.util.Iterator;
 public class LSH extends SimilaritySearcher{
   List<Map<String, Set<Integer>>> bandToBuckets;
   int fp = 0; // False Positives
+  Set<SimilarPair> similarPairs;
 
   /**
    * Construct an LSH similarity searcher.
@@ -200,19 +201,15 @@ public class LSH extends SimilaritySearcher{
   @Override
   public Set<Neighbor> getNeighborsAboveThreshold(int internalID, double thr) {
     Set<Neighbor> candidateNeighbors = new HashSet<Neighbor>();
+    if (similarPairs == null) {
+      similarPairs = getSimilarPairsAboveThreshold(thr);
+    }
     
-    for (Map<String, Set<Integer>> band : bandToBuckets) {
-      for (Set<Integer> bucket : band.values()) {
-        if (bucket.contains(internalID)) {
-          for (int second : bucket) {
-            if (internalID != second) {
-              double similarity = jaccard(internalID, second);
-              if (similarity > thr) {
-                candidateNeighbors.add(new Neighbor(second, similarity));
-              }
-            }
-          }
-        }
+    for (SimilarPair pair : similarPairs) {
+      if (internalID == pair.getId1()) {
+        candidateNeighbors.add(new Neighbor(pair.getId2(), pair.getSimilarity()));
+      } else if (internalID == pair.getId2()) {
+        candidateNeighbors.add(new Neighbor(pair.getId1(), pair.getSimilarity()));
       }
     }
 

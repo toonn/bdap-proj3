@@ -2,3 +2,4 @@
 java DocumentRunner -threshold 0.5 -dir ../data/reuters -maxFiles 300 -method lsh -shingleLength 10 -numHashes 116 -numBands 29
 
 # Movie recommender:
+java MovieRunner -trainingFile ../data/movielens/ra.train -testFile ../data/movielens/ra.test -threshold 0.5 -method lsh -numHashes 116 -numBands 29
