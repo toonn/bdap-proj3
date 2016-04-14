@@ -10,6 +10,8 @@ import java.util.Set;
  *
  */
 public class BruteForceSearch extends SimilaritySearcher{
+  private int tp; // Total positives
+  private int tn; // Total negatives
 
 	public BruteForceSearch(Map<Integer,Set<Integer>> objectMapping){
 		super(objectMapping);
@@ -29,10 +31,14 @@ public class BruteForceSearch extends SimilaritySearcher{
 					double sim = jaccardSimilarity(objectMapping.get(obj1),objectMapping.get(obj2));
 					if (sim > threshold){
 						cands.add(new SimilarPair(obj1, obj2, sim));
-					}
-	   			}
+            tp++;
+					} else {
+            tn++;
+          }
+        }
 			}
 		}
+                System.out.println("Total Positives: " + tp + "   Total Negatives: " + tn);
 		return cands;
 	}
 

@@ -55,6 +55,29 @@ public class SimilarPair implements Comparable<SimilarPair>{
 	public double getSimilarity(){
 		return sim;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+          if (!(obj instanceof SimilarPair)) {
+            return false;
+          } else {
+            SimilarPair o = (SimilarPair) obj;
+            return id1 == o.getId1() && id2 == o.getId2() && sim == o.getSimilarity();
+          }
+	}
 	
+        /**
+         * Based on a stackoverflow post, any proper hashfunction of the fields
+         * in equals should do.
+         */
+        @Override
+        public int hashCode() {
+          int result = 42;
+          result = 37 * result + id1;
+          result = 37 * result + id2;
+          long l = Double.doubleToLongBits(sim);
+          result = 37 * result + (int)(l ^ (l >>> 32));;
+          return result;
+        }
 
 }

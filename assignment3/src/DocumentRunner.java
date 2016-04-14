@@ -63,7 +63,9 @@ public class DocumentRunner {
             	maxFiles = Integer.parseInt(args[i+1]);
             }else if(arg.equals("-shingleLength")){
             	shingleLength = Integer.parseInt(args[i+1]);
-            }
+            } else if (arg.equals("-rowsPerBand")) {
+		numHashes = Integer.parseInt(args[i+1]) * numBands;
+	    }
 			i += 2;
 		}
 

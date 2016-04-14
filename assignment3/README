@@ -1,3 +1,4 @@
-# Document similarity checker:
+# Document similarity checker (to be executed from assignment3/src)
+java DocumentRunner -threshold 0.5 -dir ../data/reuters -maxFiles 300 -method lsh -shingleLength 10 -numHashes 116 -numBands 29
 
 # Movie recommender:
